@@ -1,0 +1,178 @@
+Build a FULLSTACK luxury cosmetics ecommerce website for "Orivya Eco Private Limited" that can be deployed to production.
+
+TECH STACK:
+- Next.js 14+ (App Router) + TypeScript
+- Tailwind CSS (luxury UI)
+- Prisma ORM
+- MongoDB Atlas database
+- NextAuth (credentials + Google login)
+- Zod validation
+- Server Actions / API routes for backend
+- Store images using local /public for now (Cloudinary optional later)
+
+IMPORTANT SECURITY RULES:
+- No OTP system anywhere
+- No admin panel API key editor page (keys must be changed in .env)
+- Role-based access control must be enforced on both UI and API level
+
+DESIGN REQUIREMENTS:
+- Luxury UI like Sephora/Nykaa
+- Black + white base with subtle purple/pink gradients
+- Glassmorphism cards, premium typography (Inter/Poppins)
+- Smooth animations
+- Fully responsive for mobile/tablet/desktop full screen
+
+CUSTOMER PAGES:
+- Home (hero, trust badges, featured categories, best sellers, reviews)
+- Shop (filters, sorting, pagination)
+- Product details
+- Cart
+- Checkout (guest checkout ON)
+- Login / Signup
+- Wishlist
+- User dashboard:
+  - Orders list
+  - Order details
+  - Saved addresses
+  - Profile settings
+- Track order page
+- About us
+- Contact us
+- FAQ
+- Policy pages:
+  - Privacy Policy
+  - Terms & Conditions
+  - Shipping Policy
+  - Refund & Return Policy
+  - Cancellation Policy
+
+CUSTOMER FEATURES:
+- Advanced search bar in header:
+  - Live suggestions dropdown
+  - Trending searches
+  - Search by name, tags, category, keywords
+- Combo/Bundles system:
+  - Combo products with special pricing
+  - “You save ₹___” display
+- Referral system:
+  - Referral code/link per user
+  - Referral rewards wallet credit
+  - Anti-abuse rules (reward only on first successful order)
+- Festival/Season themes system:
+  - Default luxury theme
+  - Diwali, Eid, Christmas, New Year, Valentine, Holi, Monsoon, Summer Sale, Navratri
+  - Admin can apply theme instantly
+  - Theme scheduler (start date, end date, auto revert)
+
+ADMIN PANEL (FULL WORKING):
+Route: /admin
+Include a luxury admin dashboard with sidebar navigation.
+
+Admin modules:
+- Products CRUD (add/edit/delete)
+- Categories CRUD
+- Inventory management
+- Bulk product import (CSV upload)
+- Orders management:
+  - status updates
+  - add tracking number
+  - view customer details
+- Customers list
+- Coupons system
+- Combo management
+- Referral management
+- Reviews moderation
+- Website settings (config center):
+  - logo + favicon
+  - theme colors + gradients toggle
+  - homepage banner/slider manager
+  - support email/phone/whatsapp
+  - policies editor
+  - search settings (trending keywords, synonyms, boosting)
+
+ANALYTICS (STATISTICS PAGE):
+Admin → Analytics:
+- Total sales (today/week/month)
+- Total orders
+- Total customers
+- Sales graph
+- Orders graph
+- Top products
+- Category performance
+- Low stock alerts
+- Date range filters
+
+WAREHOUSING SYSTEM:
+Admin → Warehousing:
+- Create multiple warehouses
+- Stock per warehouse per product
+- Transfer stock between warehouses
+- Stock movement logs
+- Assign warehouse to each order
+- Low stock warning system
+
+STAFF SYSTEM (FULL WORKING):
+Admin → Staff & Roles:
+- Add staff
+- Remove staff
+- Disable/enable staff
+- Change role
+- Permission-based access
+- Activity logs
+
+ROLES REQUIRED:
+- Super Admin (Owner)
+- Admin (full access but cannot remove/disable Super Admin)
+- Order Manager
+- Product Manager
+- Support Executive
+- Refund Manager
+- Marketing Manager
+- Accountant
+- Warehouse Manager
+
+PAYMENTS (FULL WORKING):
+- Razorpay (India)
+- Stripe (International)
+- PayPal (International)
+- COD option
+Include a payment method selector in checkout.
+Store payment status in database.
+
+ORDER FLOW:
+- Create order
+- Payment success updates order status
+- COD creates order as pending
+- Admin can update order status (packed/shipped/out for delivery/delivered)
+- Customer can track order via dashboard and track order page
+
+EMAIL NOTIFICATIONS:
+Use a simple SMTP setup from .env to send:
+- Order confirmed
+- Order shipped
+- Order delivered
+- Refund processed
+
+DEFAULT SUPER ADMIN:
+Seed a default Super Admin account:
+Email: admin@orivyaeco.com
+Password: Orivya@123
+
+SEED DATA:
+- Add 20–40 dummy products
+- Add categories: Skincare, Makeup, Haircare, Bodycare, Combos
+- Add 3 demo combos
+- Add trending searches list
+
+OUTPUT REQUIREMENTS:
+- Must run without errors on Replit
+- Include package.json scripts:
+  - npm run dev
+  - npm run build
+  - npm run start
+  - npm run seed
+- Include .env.example with all required variables
+- Provide clear README.md with setup steps for:
+  - local PC
+  - Replit
+  - Vercel deployment
