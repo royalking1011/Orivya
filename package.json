@@ -45,6 +45,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "connect-pg-simple": "^10.0.0",
+    "cors": "^2.8.6",
     "date-fns": "^3.6.0",
     "dotenv": "^17.2.4",
     "drizzle-orm": "^0.39.3",
@@ -99,13 +100,12 @@
     "autoprefixer": "^10.4.20",
     "cross-env": "^10.1.0",
     "drizzle-kit": "^0.31.9",
-    "esbuild": "^0.25.12",
+    "esbuild": "^0.21.5",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.21.0",
     "typescript": "5.6.3",
-    "vite": "^7.3.0",
-    "esbuild": "^0.21.5"
+    "vite": "^7.3.0"
   },
   "overrides": {
     "drizzle-kit": {
