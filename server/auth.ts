@@ -36,7 +36,7 @@ export function setupAuth(app: Express) {
     cookie: {
       secure: false,
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "none",
     },
   };
 

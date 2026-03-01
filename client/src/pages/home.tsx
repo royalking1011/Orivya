@@ -154,8 +154,8 @@ export default function HomePage() {
                 <div className="rounded-[2.5rem] border bg-white/60 backdrop-blur shadow-xl overflow-hidden">
                   <div className="aspect-[4/4] w-full">
                     <img
-                      src="https://images.unsplash.com/photo-1612810436541-336d0f1f78da?w=1400&q=80"
-                      alt="Orivya Luxury"
+                      src="https://ibb.co/mFH4F5FD"
+                      alt="Orivya Luxury 1"
                       className="h-full w-full object-cover"
                     />
                   </div>

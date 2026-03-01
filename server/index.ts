@@ -9,11 +9,8 @@ import { setupAuth } from "./auth";
 const app = express();
 
 app.use(cors({
-  origin: [
-	"https://localhost:3000",
-	"https://orivya.vercel.app"
-	]
-	credentials: true
+  origin: "https://orivya.vercel.app",
+	credentials: true,
  }));
 const httpServer = createServer(app);
 

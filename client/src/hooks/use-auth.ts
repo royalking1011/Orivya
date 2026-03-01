@@ -42,7 +42,7 @@ export function useAuth() {
   // =========================
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginInput) => {
-      const res = await fetch(api.auth.login.path, {
+      const res = await fetch("https://orivya-api.onrender.com/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
