@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, jsonb, decimal, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp,numeric, jsonb, decimal, pgEnum } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -38,7 +38,7 @@ export const users = pgTable("users", {
   role: roleEnum("role").default("customer").notNull(),
   referralCode: text("referral_code").unique(),
   walletBalance: decimal("wallet_balance", { precision: 10, scale: 2 }).default("0").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const categories = pgTable("categories", {
@@ -52,6 +52,7 @@ export const categories = pgTable("categories", {
 export const products = pgTable("products", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
+  sku: text("sku").unique(),
   description: text("description").notNull(),
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
   categoryId: integer("category_id").references(() => categories.id),
@@ -82,33 +83,54 @@ export const inventory = pgTable("inventory", {
   quantity: integer("quantity").default(0).notNull(),
 });
 
+// =========================
+// ORDERS
+// =========================
 export const orders = pgTable("orders", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id").references(() => users.id), // Can be null for guest checkout (if we supported it fully, but schema requires ID usually. We'll assume guest creates a temp user or similar, or nullable)
-  status: orderStatusEnum("status").default("pending").notNull(),
-  totalAmount: decimal("total_amount", { precision: 10, scale: 2 }).notNull(),
-  paymentMethod: paymentMethodEnum("payment_method").notNull(),
-  paymentStatus: paymentStatusEnum("payment_status").default("pending").notNull(),
-  shippingAddress: jsonb("shipping_address").$type<{
-    street: string;
-    city: string;
-    state: string;
-    zip: string;
-    country: string;
-    phone: string;
-  }>().notNull(),
+
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+
+  totalAmount: numeric("total_amount", { precision: 12, scale: 2 })
+    .notNull()
+    .default("0.00"),
+
+  status: text("status").notNull().default("pending"),
+
+  paymentMethod: text("payment_method").notNull().default("cod"),
+  paymentStatus: text("payment_status").notNull().default("pending"),
+
   trackingNumber: text("tracking_number"),
-  warehouseId: integer("warehouse_id").references(() => warehouses.id), // Assigned warehouse
-  createdAt: timestamp("created_at").defaultNow(),
+
+  // IMPORTANT: JSON shipping address
+  shippingAddress: jsonb("shipping_address").notNull(),
+
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// =========================
+// ORDER ITEMS
+// =========================
 export const orderItems = pgTable("order_items", {
   id: serial("id").primaryKey(),
-  orderId: integer("order_id").references(() => orders.id).notNull(),
-  productId: integer("product_id").references(() => products.id).notNull(),
-  quantity: integer("quantity").notNull(),
-  price: decimal("price", { precision: 10, scale: 2 }).notNull(), // Snapshot price
+
+  orderId: integer("order_id")
+    .notNull()
+    .references(() => orders.id, { onDelete: "cascade" }),
+
+  productId: integer("product_id")
+    .notNull()
+    .references(() => products.id, { onDelete: "restrict" }),
+
+  quantity: integer("quantity").notNull().default(1),
+
+  price: numeric("price", { precision: 12, scale: 2 })
+    .notNull()
+    .default("0.00"),
 });
+
 
 export const reviews = pgTable("reviews", {
   id: serial("id").primaryKey(),

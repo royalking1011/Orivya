@@ -1,45 +1,153 @@
-import { Switch, Route } from "wouter";
-import { queryClient } from "./lib/queryClient";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/not-found";
+import { Switch, Route, useLocation } from "wouter";
+import { AnimatePresence, motion } from "framer-motion";
 
-import Home from "@/pages/home";
-import Shop from "@/pages/shop";
-import ProductDetail from "@/pages/product-detail";
-import Cart from "@/pages/cart";
-import Checkout from "@/pages/checkout";
+import HomePage from "@/pages/home";
+import ShopPage from "@/pages/shop";
+import CartPage from "@/pages/cart";
+import CheckoutPage from "@/pages/checkout";
+import ProductDetailPage from "@/pages/product-detail";
+import ProfilePage from "@/pages/profile";
+import NotFoundPage from "@/pages/not-found";
 import AuthPage from "@/pages/auth";
-import Profile from "@/pages/profile";
+
+// ADMIN
 import AdminDashboard from "@/pages/admin-dashboard";
+import AdminProducts from "@/pages/admin-products";
+import AdminOrders from "@/pages/admin-orders";
+import AdminCustomers from "@/pages/admin-customers";
+import AdminAnalytics from "@/pages/admin-analytics";
+import AdminWarehouse from "@/pages/admin-warehouse";
+import AdminPrint from "@/pages/admin-print";
+import AdminStaff from "@/pages/admin-staff";
+import AdminSettings from "@/pages/admin-settings";
 
-function Router() {
+function Page({ children }: { children: React.ReactNode }) {
   return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/shop" component={Shop} />
-      <Route path="/product/:id" component={ProductDetail} />
-      <Route path="/cart" component={Cart} />
-      <Route path="/checkout" component={Checkout} />
-      <Route path="/auth" component={AuthPage} />
-      <Route path="/profile" component={Profile} />
-      <Route path="/admin" component={AdminDashboard} />
-      <Route path="/admin/*" component={AdminDashboard} /> {/* Simple catch-all for admin subroutes to render same dashboard for MVP */}
-      <Route component={NotFound} />
-    </Switch>
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -12 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      className="w-full"
+    >
+      {children}
+    </motion.div>
   );
 }
 
-function App() {
+export default function App() {
+  const [location] = useLocation();
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Router />
-      </TooltipProvider>
-    </QueryClientProvider>
+    <AnimatePresence mode="wait">
+      <motion.div key={location} className="w-full">
+        <Switch>
+          {/* PUBLIC */}
+          <Route path="/">
+            <Page>
+              <HomePage />
+            </Page>
+          </Route>
+
+          <Route path="/shop">
+            <Page>
+              <ShopPage />
+            </Page>
+          </Route>
+
+          <Route path="/cart">
+            <Page>
+              <CartPage />
+            </Page>
+          </Route>
+
+          <Route path="/checkout">
+            <Page>
+              <CheckoutPage />
+            </Page>
+          </Route>
+
+          <Route path="/product/:id">
+            <Page>
+              <ProductDetailPage />
+            </Page>
+          </Route>
+
+          <Route path="/profile">
+            <Page>
+              <ProfilePage />
+            </Page>
+          </Route>
+
+          <Route path="/auth">
+            <Page>
+              <AuthPage />
+            </Page>
+          </Route>
+
+          {/* ADMIN */}
+          <Route path="/admin">
+            <Page>
+              <AdminDashboard />
+            </Page>
+          </Route>
+
+          <Route path="/admin/products">
+            <Page>
+              <AdminProducts />
+            </Page>
+          </Route>
+
+          <Route path="/admin/orders">
+            <Page>
+              <AdminOrders />
+            </Page>
+          </Route>
+
+          <Route path="/admin/customers">
+            <Page>
+              <AdminCustomers />
+            </Page>
+          </Route>
+
+          <Route path="/admin/analytics">
+            <Page>
+              <AdminAnalytics />
+            </Page>
+          </Route>
+
+          <Route path="/admin/warehouse">
+            <Page>
+              <AdminWarehouse />
+            </Page>
+          </Route>
+
+          <Route path="/admin/print">
+            <Page>
+              <AdminPrint />
+            </Page>
+          </Route>
+
+          <Route path="/admin/staff">
+            <Page>
+              <AdminStaff />
+            </Page>
+          </Route>
+
+          <Route path="/admin/settings">
+            <Page>
+              <AdminSettings />
+            </Page>
+          </Route>
+
+          {/* 404 */}
+          <Route>
+            <Page>
+              <NotFoundPage />
+            </Page>
+          </Route>
+        </Switch>
+      </motion.div>
+    </AnimatePresence>
   );
 }
-
-export default App;

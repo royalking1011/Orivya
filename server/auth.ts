@@ -16,6 +16,11 @@ async function hashPassword(password: string) {
 }
 
 async function comparePasswords(supplied: string, stored: string) {
+  // If stored is not hashed (demo user), allow "demo"
+  if (!stored.includes(".")) {
+    return supplied === stored;
+  }
+
   const [hashed, salt] = stored.split(".");
   const hashedBuf = Buffer.from(hashed, "hex");
   const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
@@ -24,13 +29,15 @@ async function comparePasswords(supplied: string, stored: string) {
 
 export function setupAuth(app: Express) {
   const sessionSettings: session.SessionOptions = {
-    secret: process.env.SESSION_SECRET || "r3pl1t_s3cr3t_k3y",
+    secret: process.env.SESSION_SECRET || "dev_secret_key",
     resave: false,
     saveUninitialized: false,
-    store: undefined, // Memory store by default
+    store: undefined,
     cookie: {
-      secure: app.get("env") === "production",
-    }
+      secure: false,
+      httpOnly: true,
+      sameSite: "lax",
+    },
   };
 
   app.set("trust proxy", 1);
@@ -39,25 +46,29 @@ export function setupAuth(app: Express) {
   app.use(passport.session());
 
   passport.use(
-    new LocalStrategy(async (username, password, done) => {
-      try {
-        const user = await storage.getUserByUsername(username);
-        if (!user || !(await comparePasswords(password, user.password))) {
-          return done(null, false);
-        } else {
+    new LocalStrategy(
+      { usernameField: "email", passwordField: "password" },
+      async (email, password, done) => {
+        try {
+          const user = await storage.getUserByEmail(email);
+
+          if (!user) return done(null, false);
+          if (!(await comparePasswords(password, user.password))) return done(null, false);
+
           return done(null, user);
+        } catch (err) {
+          return done(err);
         }
-      } catch (err) {
-        return done(err);
-      }
-    }),
+      },
+    ),
   );
 
   passport.serializeUser((user, done) => done(null, (user as User).id));
+
   passport.deserializeUser(async (id: number, done) => {
     try {
       const user = await storage.getUser(id);
-      done(null, user);
+      done(null, user || null);
     } catch (err) {
       done(err);
     }

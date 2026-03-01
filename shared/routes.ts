@@ -50,7 +50,7 @@ export const api = {
     },
     me: {
       method: 'GET' as const,
-      path: '/api/user' as const,
+      path: '/api/auth/me' as const,
       responses: {
         200: z.custom<typeof users.$inferSelect>(),
         401: errorSchemas.unauthorized,
